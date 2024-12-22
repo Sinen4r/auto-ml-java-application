@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="dashboard">
+        <header>
+            <h1>Welcome, Customer</h1>
+            <nav>
+                <a href="#view-datasets">View Datasets</a>
+                <a href="#generate-graphs">Generate Graphs</a>
+            </nav>
+        </header>
+        <main>
+            <section id="view-datasets">
+                <h2>Upload Your Dataset</h2>
+                <form action="/api/files/upload" method="POST" enctype="multipart/form-data">
+                    <label for="name">Your Name:</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                    <label for="name">the target column:</label>
+                    <input type="text" id="target" name="target" placeholder="Enter your name" required>
+                    <label for="name">the analysis you want to apply :</label>
+                    <select name="analysis" id="analysis">
+                        <option value="time_series">time series analysis </option>
+                        <option value="correlation">correlation analysis</option>
+                        <option value="regression">regression analysis</option>
+                      </select>
+                    <label for="file">Choose File:</label>
+                    <input type="file" id="file" name="file" accept=".csv,.json" required>
+        
+                    <button type="submit">Upload</button>
+                </form>
+				<h1>Upload Status</h1>
+				   <p th:text="${message}"></p> <!-- Display the message passed from the controller -->
+            </section>
+            <section id="generate-graphs">
+                <h2>Generate Graphs</h2>
+                <p>Create visualizations from datasets.</p>
+                <form action="/api/files/report" method="get" enctype="multipart/form-data">
+
+                <button type="submit">generate</button>
+            </form>
+
+            </section>
+        </main>
+    </div>
+</body>
+</html>
