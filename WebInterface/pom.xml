@@ -55,6 +55,12 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!-- machine learning dependency-->
+        <dependency>  
+        <groupId>org.machine</groupId>
+  		<artifactId>tribuo-demo</artifactId>
+  		<version>1.0</version>
+  </dependency>
     </dependencies>
 
     <build>

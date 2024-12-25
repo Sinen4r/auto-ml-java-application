@@ -19,17 +19,27 @@
             <section id="view-datasets">
                 <h2>Upload Your Dataset</h2>
                 <form action="/api/files/upload" method="POST" enctype="multipart/form-data">
+                   
                     <label for="name">Your Name:</label>
                     <input type="text" id="name" name="name" placeholder="Enter your name" required>
-                    <label for="name">the target column:</label>
-                    <input type="text" id="target" name="target" placeholder="Enter your name" required>
+                   
+                    <label for="name">the type of ML Task:</label>
+                    <input type="text" id="name" name="target" placeholder="Enter your target column" required>
+
+                    <label for="name">the type of ML Task:</label>
+                    <select name="typePred" id="analysis">
+                        <option value="multi_label">multi label </option>
+                        <option value="regression">regression</option>
+                        <option value="binary_classification">binary classification</option>
+                      </select>  
                     <label for="name">the analysis you want to apply :</label>
                     <select name="analysis" id="analysis">
                         <option value="time_series">time series analysis </option>
                         <option value="correlation">correlation analysis</option>
                         <option value="regression">regression analysis</option>
                       </select>
-                    <label for="file">Choose File:</label>
+                   
+                      <label for="file">Choose File:</label>
                     <input type="file" id="file" name="file" accept=".csv,.json" required>
         
                     <button type="submit">Upload</button>
@@ -40,11 +50,16 @@
             <section id="generate-graphs">
                 <h2>Generate Graphs</h2>
                 <p>Create visualizations from datasets.</p>
-                <form action="/api/files/report" method="get" enctype="multipart/form-data">
+                <form action="/api/files/generate" method="post" enctype="multipart/form-data">
 
-                <button type="submit">generate</button>
+                <button type="submit" name="action" value="generate">generate</button>
             </form>
-
+            <h1>reports generated :</h1>
+            <ul>
+                <th:block th:each="repo : ${prediction}">
+                    <li th:text="${repo}"></li>
+                </th:block>
+            </ul>
             </section>
         </main>
     </div>
