@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.http.HttpSession;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -94,20 +96,27 @@ public class FileController {
         }
     };
     @PostMapping("/generate")
-    public String generateImage(Model model) throws IOException {
+    public String generateImage(HttpSession session,Model model) throws IOException {
         // Retrieve the uploaded data from the session
-        UploadData uploadData = (UploadData) model.getAttribute("uploadData");
-
+        UploadData uploadData = (UploadData) session.getAttribute("uploadData");
+        
         if (uploadData == null) {
             model.addAttribute("prediction", "No data available to generate. Please upload a file first.");
             return "customer";
         }
-        System.out.println("done prediction");
-
+        // houssem part add il ligne ili bch truni bih il data cleaning wlazmik traja3 il path mta3 il preprocessed data ismha pathPreprocessed
+        // bch ta5ou il data ili user uploadaha use uploadData.getFilePath() 
+        Strign pathPreprocessed= "badal htha bilfunction mtaiik";
         // Perform the generate action using the stored data
-        List<String> prediction = machine.Predict(uploadData.getFilePath(),uploadData.getTask(), uploadData.getTarget());
+        List<String> prediction = machine.Predict(pathPreprocessed,uploadData.getTask(), uploadData.getTarget());
         System.out.println("done prediction");
         model.addAttribute("prediction",  prediction);
         System.out.println(prediction);
+
+        // Hassen part zid il ligne mtaaiik win andki il method ili bch trani li classes mtaiik 
+        // istaaml pathPreprocessed variable bch taccessi il data mtaana 
+        // istaaml model.addAttribute('graph',graphurl) bch taddi  il graph mtaiik fil website
+        
+        
         return "customer";
     }}
