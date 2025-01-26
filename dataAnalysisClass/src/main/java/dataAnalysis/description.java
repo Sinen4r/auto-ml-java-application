@@ -15,6 +15,9 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import smile.data.DataFrame;
 import smile.io.Read;
+import java.util.ArrayList; // Import ArrayList
+import java.util.List; 
+
 
 public class description extends functionality{
 	public Map<String, String> detectDataTypes(List<Map<String, String>> data) {
@@ -39,7 +42,8 @@ public class description extends functionality{
 	public void describe(String filePath) throws IOException {
 	    Reader in = new FileReader(filePath);
 	    Iterable<CSVRecord> records = CSVFormat.DEFAULT.withHeader().parse(in);
-	 
+        List<String> output = new ArrayList<>();
+
 	    DescriptiveStatistics stats = new DescriptiveStatistics();
 	    for (CSVRecord record : records) {
 	    	try {    
@@ -56,10 +60,14 @@ public class description extends functionality{
 	    System.out.println("Standard Deviation: " + stats.getStandardDeviation());
 	    System.out.println("Min: " + stats.getMin());
 	    System.out.println("Max: " + stats.getMax());
+	    output.add("Mean: " + stats.getMean());
+	    output.add("Standard Deviation: " + stats.getStandardDeviation());
+	    output.add("Min: " + stats.getMin());
+	    output.add("Max: " + stats.getMax());
 	}
-	public static void kurtiosAndSkewness(DataFrame df) throws IOException, URISyntaxException {
+	public  List<String> kurtiosAndSkewness(DataFrame df) throws IOException, URISyntaxException {
 
-
+        List<String> output = new ArrayList<>();
 	    for (String column : df.schema().names()) {
 	        // Skip non-numeric columns (if any)
 	        if (tryConvertToFloat((String) df.column(column).get(1)) ) {
@@ -74,10 +82,14 @@ public class description extends functionality{
 
 	            // Print results for each column
 	            System.out.println("Column: " + df.column(column).get(0));
+	            output.add("Column: " + df.column(column).get(0));
 	            System.out.println("  Skewness: " + skewness);
+	            output.add("  Skewness: " + skewness);
 	            System.out.println("  Kurtosis: " + kurtosis);
+	            output.add("  Kurtosis: " + kurtosis);
 	        } else {
 	            System.out.println("Skipping non-numeric column: " + column);
 	        }
 	}
+	return output;    
 }}

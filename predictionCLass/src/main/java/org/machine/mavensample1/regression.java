@@ -54,12 +54,12 @@ public class regression{
 		    return evaluation.r2(dimension);
 		}
 
-	   public String bestModel(String s) throws IOException {
+	   public List<String> bestModel(String s,String typePred) throws IOException {
 		    
 		   var regressionFactory = new RegressionFactory();
 	       System.out.println(Paths.get(s));
 	       var csvLoader = new CSVLoader<>(regressionFactory);
-	   	   var wineSource = csvLoader.loadDataSource(Paths.get("C:\\Advertising.csv"),"sales");
+	   	   var wineSource = csvLoader.loadDataSource(Paths.get(s),typePred);
 	       var splitter = new TrainTestSplitter<>(wineSource, 0.7f, 0L);
 	       Dataset<Regressor> trainData = new MutableDataset<>(splitter.getTrain());
 	       Dataset<Regressor> evalData = new MutableDataset<>(splitter.getTest());
@@ -95,9 +95,11 @@ public class regression{
 	    		var xgbModel = train("XGBoost",xgb,trainData);
 	    		r2.add(evaluate(xgbModel,evalData));
 	            int maxIndex = (int) prediction.getMaxIndex(r2);
+	            List<String> result = new ArrayList<>();
+	            result.add("Best Model that fit this data is"+models[maxIndex]+"with R2 ="+r2.get(maxIndex))
 ;
 	            
 
-	    		return ("Best Model that fit this data is"+models[maxIndex]+"with R2 ="+r2.get(maxIndex));
+	    		return result;
 	   }
 }

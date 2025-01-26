@@ -1,6 +1,9 @@
 package org.machine.mavensample1;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.tribuo.Model;
@@ -26,8 +29,21 @@ public abstract class prediction {
 
 	       return maxIndex;
 	   }
-	   public abstract void evaluate(Model <MultiLabel> model, MutableDataset  <MultiLabel> testDataa);
+	    public static String[] getCSVHeaders(String filePath) {
+	        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+	            // Read the first line (header)
+	            String headerLine = br.readLine();
+	            if (headerLine != null) {
+	                // Split the header by comma and return as String[]
+	                return headerLine.split(",");
+	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	        return null; // Return null if the file is empty or an error occurs
+	    }
+	   public abstract List<String> evaluate(Model <MultiLabel> model, MutableDataset  <MultiLabel> testDataa);
 	   public abstract Model<MultiLabel> train(MutableDataset <MultiLabel> trainingDataset);
-	   public abstract void bestModel(String s) throws IOException;
+	   public abstract List<String> bestModel(String s,String labbel) throws IOException;
 	   
 }

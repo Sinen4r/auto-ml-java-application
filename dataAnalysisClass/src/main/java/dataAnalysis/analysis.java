@@ -31,20 +31,20 @@ public class analysis extends functionality{
     // TimeSeries Analysis
 
 	public static List<Double> calculateMovingAverage(DataFrame df, String column, int windowSize) {
-        List<Double> data = new ArrayList<>();
+        //List<Double> data = new ArrayList<>();
         
-        double[] columnData = df.column(column).toDoubleArray();
-        
-        for (double value : columnData) {
-            data.add(value);
-        }
+        //double[] columnData = df.column(column).toDoubleArray();
+		String[] data = df.column(column).toStringArray();
+        String[] filteredData = Arrays.copyOfRange(data, 1, data.length);
+        double[] data1 = convertStringArrayToDouble(filteredData);
+    
         
         List<Double> movingAverages = new ArrayList<>();
         
-        for (int i = 0; i <= data.size() - windowSize; i++) {
+        for (int i = 0; i <= data1.length - windowSize; i++) {
             double sum = 0.0;
             for (int j = i; j < i + windowSize; j++) {
-                sum += data.get(j);
+                sum += data1[j];
             }
             movingAverages.add(sum / windowSize);
         }

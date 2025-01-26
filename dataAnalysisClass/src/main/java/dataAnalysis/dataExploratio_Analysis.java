@@ -21,9 +21,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class dataExploratio_Analysis {
-	
-public static void main(String[] args) throws IOException, URISyntaxException  {
-    String filePath = "C:\\Advertising.csv";
+
+
+public static String DataExplo(String Path,String analysisType) throws IOException, URISyntaxException  {
+    String filePath = Path;
     List<String> colummns = new ArrayList<>();
 
     DataFrame df = Read.csv(filePath);
@@ -32,12 +33,9 @@ public static void main(String[] args) throws IOException, URISyntaxException  {
     System.out.println(colummns.get(1));
     String[] columnNames=df.schema().names();
     df.column(columnNames[0]);
-    description.kurtiosAndSkewness(df);
-    System.out.println("correlation of column"+columnNames[0]+" " +columnNames[1]+"is equal to : "+analysis.calculateCorrelation(df, columnNames[0], columnNames[1]));
- }
-    
-
-
-
-}
+    if (analysisType=="correlation") {
+    	return ("correlation of column"+columnNames[0]+" " +columnNames[1]+"is equal to : "+analysis.calculateCorrelation(df, columnNames[0], columnNames[1]));
+    }else {
+	    return ("Time Series of column"+columnNames[0]+" " +columnNames[1]+"is equal to : "+analysis.calculateMovingAverage(df, columnNames[1], 4));
+}}}
 

@@ -23,6 +23,8 @@ import org.tribuo.regression.evaluation.RegressionEvaluator;
 import org.tribuo.util.Util;
 
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,15 +35,16 @@ import com.oracle.labs.mlrg.olcut.config.json.*;
 
 public class multiClassification extends prediction{
 
-public void bestModel(String s) throws IOException {
+public List<String> bestModel(String s,String Label) throws IOException {
 	var factory = new MultiLabelFactory();
 	var trainSource = new LibSVMDataSource<>(Paths.get(s),factory);
-	var irisSplitter = new TrainTestSplitter<>(trainSource,0.7,1L);
-	var trainingDataset = new MutableDataset<>(irisSplitter.getTrain());
-	var testingDataset = new MutableDataset<>(irisSplitter.getTest());
-
+	var DataSplitter = new TrainTestSplitter<>(trainSource,0.7,1L);
+	var trainingDataset = new MutableDataset<>(DataSplitter.getTrain());
+	var testingDataset = new MutableDataset<>(DataSplitter.getTest());
+	System.out.println(String.format("Training data size = %d, number of features = %d, number of classes = %d",trainingDataset.size(),trainingDataset.getFeatureMap().size(),trainingDataset.getOutputInfo().size()));
+	System.out.println(String.format("Testing data size = %d, number of features = %d, number of classes = %d",testingDataset.size(),testingDataset.getFeatureMap().size(),testingDataset.getOutputInfo().size()));
 	Model <MultiLabel> dtModel=train(trainingDataset);
-	evaluate(dtModel,testingDataset);
+	return evaluate(dtModel,testingDataset);
 }
 @Override
 public Model<MultiLabel> train(MutableDataset <MultiLabel> trainingDataset) {
@@ -51,22 +54,28 @@ public Model<MultiLabel> train(MutableDataset <MultiLabel> trainingDataset) {
 	var dtModel = dtTrainer.train(trainingDataset);
 	var dtEndTime = System.currentTimeMillis();
 	System.out.println();
+	
 	System.out.println("Tree model training took " + Util.formatDuration(dtStartTime,dtEndTime));
 	return dtModel;
 }
+
 @Override
-public void evaluate(Model <MultiLabel> model, MutableDataset  <MultiLabel> testData) {
+public List<String> evaluate(Model <MultiLabel> model, MutableDataset  <MultiLabel> testData) {
     // Evaluate the model on the test data
 	var  eval = new MultiLabelEvaluator();
 	var linTStartTime = System.currentTimeMillis();
     var evaluation = eval.evaluate(model,testData);	
     var linTEndTime = System.currentTimeMillis();
+    List<String> result = new ArrayList<>();
 
     // We create a dimension here to aid pulling out the appropriate statistics.
     // You can also produce the String directly by calling "evaluation.toString()"
     System.out.println();
     System.out.println("Linear model evaluation took " + Util.formatDuration(linTStartTime,linTEndTime));
-    System.out.println(evaluation);
+    System.out.println(evaluation.toString());
+    result.add(evaluation.toString());
+    result.add("Linear model evaluation took " + Util.formatDuration(linTStartTime,linTEndTime));
+    return result;
 }
 
 
